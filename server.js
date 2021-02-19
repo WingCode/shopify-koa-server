@@ -15,7 +15,9 @@ const { verifyRequest } = require("@shopify/koa-shopify-auth");
 // Env Configuration
 dotenv.config();
 const port = parseInt(process.env.PORT, 10) || 3000;
-const { SHOPIFY_API_SECRET_KEY, SHOPIFY_API_KEY } = process.env;
+const SHOPIFY_API_SECRET_KEY = process.env.SHOPIFY_API_SECRET_KEY;
+const SHOPIFY_API_KEY = process.env.SHOPIFY_API_KEY;
+const SCOPES = process.env.SCOPES.split(',');
 
 // Create server using Koa
 const server = new Koa();
@@ -32,7 +34,7 @@ server.use(
     createShopifyAuth({
         apiKey: SHOPIFY_API_KEY,
         secret: SHOPIFY_API_SECRET_KEY,
-        scopes: ["read_products", "write_products"],
+        scopes: SCOPES,
         afterAuth(ctx) {
             const { shop, accessToken } = ctx.session;
             ctx.cookies.set("accessToken", accessToken, { httpOnly: false });
